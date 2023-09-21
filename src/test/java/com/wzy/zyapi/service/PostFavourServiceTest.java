@@ -41,4 +41,6 @@ class PostFavourServiceTest {
         postQueryWrapper.eq("id", 1L);
         postFavourService.listFavourPostByPage(Page.of(0, 1), postQueryWrapper, loginUser.getId());
     }
+
+
 }
