@@ -9,7 +9,9 @@
     <result column="description" jdbcType="VARCHAR" property="description" />
     <result column="url" jdbcType="VARCHAR" property="url" />
     <result column="request_header" jdbcType="LONGVARCHAR" property="requestHeader" />
+    <result column="request_body" jdbcType="LONGVARCHAR" property="requestBody" />
     <result column="response_header" jdbcType="LONGVARCHAR" property="responseHeader" />
+    <result column="response_body" jdbcType="LONGVARCHAR" property="responseBody" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="method" jdbcType="VARCHAR" property="method" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
@@ -20,7 +22,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    id, `name`, description, url, request_header, response_header, `status`, `method`, 
+    id, `name`, description, url, request_header, response_header, `status`,request_body, response_body, `method`,
     create_by, create_time, update_by, update_time, is_delete
   </sql>
 </mapper>

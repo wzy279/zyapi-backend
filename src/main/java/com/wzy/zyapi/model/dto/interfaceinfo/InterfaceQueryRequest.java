@@ -1,17 +1,17 @@
 package com.wzy.zyapi.model.dto.interfaceinfo;
 
+import com.wzy.zyapi.common.PageRequest;
 import lombok.Data;
 
-import java.io.Serializable;
+import java.util.Date;
 
 /**
- * @description 接口信息的请求方法
+ * @description
  * @author: Wangzhaoyi
- * @create: 2023-09-19 14:46
+ * @create: 2023-09-23 14:12
  **/
 @Data
-public class InterfaceAddRequest implements Serializable{
-    private static final long serialVersionUID = 1L;
+public class InterfaceQueryRequest extends PageRequest {
 
     /**
      * 名称
@@ -47,12 +47,16 @@ public class InterfaceAddRequest implements Serializable{
      * 请求类型
      */
     private String method;
+
     /**
-     * 请求参数
+     * 创建人
      */
-    private String requestBody;
+    private Long createBy;
+
     /**
-     * 返回响应
+     * 创建时间
      */
-    private String responseBody;
+    private Date createTime;
+
+
 }

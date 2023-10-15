@@ -6,8 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.Date;
 import lombok.Data;
+
+import java.util.Date;
 
 /**
 * @description
@@ -15,7 +16,7 @@ import lombok.Data;
 * @author: Wangzhaoyi
 * @create: 2023-09-18 19:16
 **/
- 
+
 /**
     * 接口信息
     */
@@ -57,6 +58,14 @@ public class InterfaceInfo {
     @TableField(value = "request_header")
     @ApiModelProperty(value="请求头")
     private String requestHeader;
+
+    @TableField(value = "request_body")
+    @ApiModelProperty(value = "请求参数")
+    private String requestBody;
+
+    @TableField(value = "response_body")
+    @ApiModelProperty(value = "请求参数")
+    private String responseBody;
 
     /**
      * 响应头

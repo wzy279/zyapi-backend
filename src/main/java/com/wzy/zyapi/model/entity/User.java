@@ -1,16 +1,12 @@
 package com.wzy.zyapi.model.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.util.Date;
-
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 用户
@@ -106,6 +102,13 @@ public class User implements Serializable {
     @ApiModelProperty(value="是否删除")
     @TableLogic
     private Integer isDelete;
+
+    @TableField(value = "accesskey")
+    private String accesskey;
+
+    @TableField(value = "secretkey")
+    private String secretkey;
+
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

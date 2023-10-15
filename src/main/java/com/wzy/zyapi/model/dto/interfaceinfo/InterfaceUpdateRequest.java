@@ -5,13 +5,14 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * @description 接口信息的请求方法
+ * @description
  * @author: Wangzhaoyi
- * @create: 2023-09-19 14:46
+ * @create: 2023-09-21 18:04
  **/
 @Data
-public class InterfaceAddRequest implements Serializable{
-    private static final long serialVersionUID = 1L;
+public class InterfaceUpdateRequest implements Serializable {
+
+    private Long id;
 
     /**
      * 名称
@@ -47,6 +48,7 @@ public class InterfaceAddRequest implements Serializable{
      * 请求类型
      */
     private String method;
+
     /**
      * 请求参数
      */
@@ -55,4 +57,6 @@ public class InterfaceAddRequest implements Serializable{
      * 返回响应
      */
     private String responseBody;
+
+    private static final long serialVersionUID = 1L;
 }
