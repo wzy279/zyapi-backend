@@ -7,13 +7,11 @@ import com.wzy.zyapi.exception.BusinessException;
 import com.wzy.zyapi.exception.ThrowUtils;
 import com.wzy.zyapi.mapper.InterfaceInfoMapper;
 import com.wzy.zyapi.model.dto.interfaceinfo.InterfaceQueryRequest;
-import com.wzy.zyapi.model.entity.InterfaceInfo;
 import com.wzy.zyapi.service.InterfaceInfoService;
+import com.wzy.zycommon.model.entity.InterfaceInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @description 接口文档相关接口
@@ -73,10 +71,4 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         return queryWrapper;
     }
 
-    @Override
-    public List<InterfaceInfo> getlist() {
-        List<InterfaceInfo> interfaceInfos = interfaceInfoMapper.selectList(null);
-        System.out.println(interfaceInfos);
-        return interfaceInfos;
-    }
 }

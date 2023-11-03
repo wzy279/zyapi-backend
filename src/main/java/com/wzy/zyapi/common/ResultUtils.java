@@ -15,7 +15,7 @@ public class ResultUtils {
      * @param <T>
      * @return
      */
-    public static <T> BaseResponse<T> success(T data) {
+    public static  <T> BaseResponse<T> success(T data) {
         return new BaseResponse<>(0, data, "ok");
     }
 

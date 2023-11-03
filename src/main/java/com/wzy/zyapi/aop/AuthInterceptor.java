@@ -3,11 +3,9 @@ package com.wzy.zyapi.aop;
 import com.wzy.zyapi.annotation.AuthCheck;
 import com.wzy.zyapi.common.ErrorCode;
 import com.wzy.zyapi.exception.BusinessException;
-import com.wzy.zyapi.model.entity.User;
 import com.wzy.zyapi.model.enums.UserRoleEnum;
 import com.wzy.zyapi.service.UserService;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import com.wzy.zycommon.model.entity.User;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -16,6 +14,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 权限校验 AOP

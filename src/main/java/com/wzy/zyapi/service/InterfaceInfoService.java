@@ -3,9 +3,7 @@ package com.wzy.zyapi.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wzy.zyapi.model.dto.interfaceinfo.InterfaceQueryRequest;
-import com.wzy.zyapi.model.entity.InterfaceInfo;
-
-import java.util.List;
+import com.wzy.zycommon.model.entity.InterfaceInfo;
 
 /**
  * @description
@@ -19,7 +17,4 @@ public interface InterfaceInfoService extends IService<InterfaceInfo> {
 
     public QueryWrapper<InterfaceInfo> getQueryWrapper(InterfaceQueryRequest interfaceQueryRequest);
 
-
-
-    public List<InterfaceInfo> getlist();
 }

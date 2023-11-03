@@ -10,7 +10,7 @@ import com.wzy.zyapi.constant.CommonConstant;
 import com.wzy.zyapi.exception.BusinessException;
 import com.wzy.zyapi.mapper.UserMapper;
 import com.wzy.zyapi.model.dto.user.UserQueryRequest;
-import com.wzy.zyapi.model.entity.User;
+import com.wzy.zycommon.model.entity.User;
 import com.wzy.zyapi.model.enums.UserRoleEnum;
 import com.wzy.zyapi.model.vo.LoginUserVO;
 import com.wzy.zyapi.model.vo.UserVO;
@@ -259,3 +259,4 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return queryWrapper;
     }
 }
+//cba  bca  abc acb

@@ -3,7 +3,7 @@ package com.wzy.zyapi.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wzy.zyapi.model.dto.user.UserQueryRequest;
-import com.wzy.zyapi.model.entity.User;
+import com.wzy.zycommon.model.entity.User;
 import com.wzy.zyapi.model.vo.LoginUserVO;
 import com.wzy.zyapi.model.vo.UserVO;
 

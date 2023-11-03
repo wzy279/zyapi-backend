@@ -4,7 +4,7 @@
   },
   "mappings": {
     "properties": {
-      "title": {
+      "name": {
         "type": "text",
         "analyzer": "ik_max_word",
         "search_analyzer": "ik_smart",
@@ -15,7 +15,7 @@
           }
         }
       },
-      "content": {
+      "description": {
         "type": "text",
         "analyzer": "ik_max_word",
         "search_analyzer": "ik_smart",
@@ -26,17 +26,14 @@
           }
         }
       },
-      "tags": {
+      "url": {
         "type": "keyword"
       },
-      "thumbNum": {
-        "type": "long"
-      },
-      "favourNum": {
-        "type": "long"
-      },
-      "userId": {
+      "status": {
         "type": "keyword"
+      },
+      "method": {
+        "type": "text"
       },
       "createTime": {
         "type": "date"

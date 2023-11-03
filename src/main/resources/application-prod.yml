@@ -8,15 +8,24 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/zyapi?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
     username: root
-    password: Wzy020730!
+    password: Root_123
   # Redis 配置
   redis:
     database: 1
     host: localhost
     port: 6379
     timeout: 5000
-    password:
+    password: 123321
 mybatis-plus:
   configuration:
     # 生产环境关闭日志
     log-impl: ''
+dubbo:
+  application:
+    name: dubbo-springboot-demo-provider
+  protocol:
+    name: dubbo
+    port: 20880
+  registry:
+    id: nacos-registry
+    address: nacos://localhost:8848

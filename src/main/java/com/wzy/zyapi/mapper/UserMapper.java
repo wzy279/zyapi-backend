@@ -1,7 +1,8 @@
 package com.wzy.zyapi.mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.wzy.zyapi.model.entity.User;
+import com.wzy.zycommon.model.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -12,6 +13,10 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
+
+    String selectUserAccountById(@Param("id")Long id);
+
+
 
 }
 

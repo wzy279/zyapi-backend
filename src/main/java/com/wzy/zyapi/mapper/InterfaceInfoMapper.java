@@ -1,8 +1,12 @@
 package com.wzy.zyapi.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.wzy.zyapi.model.entity.InterfaceInfo;
+import com.wzy.zycommon.model.entity.InterfaceInfo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Date;
+import java.util.List;
 
 /**
 * @description
@@ -12,4 +16,14 @@ import org.apache.ibatis.annotations.Mapper;
 **/
 @Mapper
 public interface InterfaceInfoMapper extends BaseMapper<InterfaceInfo> {
+
+    String selectNameById(@Param("id")Long id);
+
+
+    List<InterfaceInfo> queryAllByUpdateTime(@Param("updateTime")Date updateTime);
+
+
+
+
+
 }

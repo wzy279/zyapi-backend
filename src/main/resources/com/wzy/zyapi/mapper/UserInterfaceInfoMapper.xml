@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wzy.zyapi.mapper.UserInterfaceInfoMapper">
-  <resultMap id="BaseResultMap" type="com.wzy.zyapi.model.entity.UserInterfaceInfo">
+  <resultMap id="BaseResultMap" type="com.wzy.zycommon.model.entity.UserInterfaceInfo">
     <!--@mbg.generated-->
     <!--@Table user_interface_info-->
     <id column="id" jdbcType="BIGINT" property="id" />
@@ -20,6 +20,21 @@
     is_delete
   </sql>
 
-
-
+  <select id="getListt" resultType="com.wzy.zyapi.model.vo.UserInterfaceInfo.UserInterfaceInfoVo" parameterType="com.wzy.zyapi.model.dto.UserInterfaceInfo.UserInterfaceInfoQueryRequest">
+    SELECT
+    user_interface_info.id As id,
+    user_interface_info.interfaceInfo_id As interfaceinfoId,
+    user_interface_info.left_num As leftNum,
+    user_interface_info.total_num As totalNum,
+    user_interface_info.user_id As userId,
+    interface_info.`name` as interfaceName,
+    `user`.user_name As userName,
+    `user_interface_info`.status As status,
+    `interface_info`.url As url
+    FROM interface_info,user_interface_info,`user`
+    WHERE `user`.id=user_interface_info.user_id and interface_info.id=user_interface_info.interfaceInfo_id
+      <if test="userId != null">and user_interface_info.user_id=#{userId}</if>
+      <if test="interfaceinfoId != null ">and user_interface_info.interfaceInfo_id=#{interfaceinfoId}</if>
+    limit #{current},#{pageSize}
+  </select>
 </mapper>

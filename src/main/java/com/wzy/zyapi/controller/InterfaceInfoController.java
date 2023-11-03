@@ -1,7 +1,9 @@
 package com.wzy.zyapi.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
+import com.wzy.zyapi.annotation.RequestLimit;
 import com.wzy.zyapi.common.*;
 import com.wzy.zyapi.exception.BusinessException;
 import com.wzy.zyapi.exception.ThrowUtils;
@@ -9,11 +11,14 @@ import com.wzy.zyapi.model.dto.interfaceinfo.InterfaceAddRequest;
 import com.wzy.zyapi.model.dto.interfaceinfo.InterfaceInvokeRequest;
 import com.wzy.zyapi.model.dto.interfaceinfo.InterfaceQueryRequest;
 import com.wzy.zyapi.model.dto.interfaceinfo.InterfaceUpdateRequest;
-import com.wzy.zyapi.model.entity.InterfaceInfo;
-import com.wzy.zyapi.model.entity.User;
 import com.wzy.zyapi.model.enums.InterfaceInfoStatusEnum;
+import com.wzy.zyapi.model.enums.UserInterfaceInfoStatusEnum;
 import com.wzy.zyapi.service.InterfaceInfoService;
+import com.wzy.zyapi.service.UserInterfaceInfoService;
 import com.wzy.zyapi.service.UserService;
+import com.wzy.zycommon.model.entity.InterfaceInfo;
+import com.wzy.zycommon.model.entity.User;
+import com.wzy.zycommon.model.entity.UserInterfaceInfo;
 import com.zyapi.zyapisdk.client.ZyapiClient;
 import io.swagger.annotations.ApiModel;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @description
@@ -36,6 +42,8 @@ import javax.servlet.http.HttpServletRequest;
 public class InterfaceInfoController {
     @Resource
     private InterfaceInfoService interfaceInfoService;
+    @Resource
+    private UserInterfaceInfoService userInterfaceInfoService;
     @Resource
     private UserService userService;
     @Resource
@@ -216,30 +224,36 @@ public class InterfaceInfoController {
      * @param request
      * @return
      */
+    @RequestLimit(count = 3)
     @PostMapping("invoke")
     public BaseResponse<Object> invokeInterface(@RequestBody InterfaceInvokeRequest invokeRequest, HttpServletRequest request) {
         //看看参数对不对
-        if (invokeRequest == null||invokeRequest.getId()<0) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
+        ThrowUtils.throwIf(invokeRequest == null||invokeRequest.getId()<0,ErrorCode.PARAMS_ERROR);
         //看看接口是不是存在并且开启的
         InterfaceInfo interfaceInfo = interfaceInfoService.getById(invokeRequest.getId());
-        if(interfaceInfo==null){
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        if(!interfaceInfo.getStatus().equals(InterfaceInfoStatusEnum.ONLINE.getValue())){
-            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
-        }
+        ThrowUtils.throwIf(interfaceInfo == null || !interfaceInfo.getStatus().equals(InterfaceInfoStatusEnum.ONLINE.getValue()), ErrorCode.PARAMS_ERROR);
         //获取到用户信息
         User loginUser = userService.getLoginUser(request);
+        QueryWrapper<UserInterfaceInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("interfaceInfo_id",invokeRequest.getId());
+        queryWrapper.eq("user_id",loginUser.getId());
+        UserInterfaceInfo userInterfaceInfo = userInterfaceInfoService.getOne(queryWrapper);
+        ThrowUtils.throwIf(userInterfaceInfo == null||userInterfaceInfo.getLeftNum()<=0|| userInterfaceInfo.getStatus().equals(UserInterfaceInfoStatusEnum.CANCLE.getValue()), ErrorCode.NO_AUTH_ERROR);
         //获取到accesskey和secretkey
         String accessKey = loginUser.getAccesskey();
         String secretKey = loginUser.getSecretkey();
         Gson gson = new Gson();
         com.zyapi.zyapisdk.model.User user = gson.fromJson(invokeRequest.getRequestBody(),com.zyapi.zyapisdk.model.User.class);
+        Map param = gson.fromJson(invokeRequest.getRequestBody(), Map.class);
         ZyapiClient tempzyapiClient = new ZyapiClient(accessKey,secretKey);
-        //调用这个 接口
-        String result = tempzyapiClient.getnamepost2(user);
+        //调用这个接口
+        String result = "111";
+        if(interfaceInfo.getMethod().equals("GET")){
+            //如果是get请求
+            result = tempzyapiClient.GETgenericRequest(interfaceInfo.getUrl(),param);
+        }else {
+            result = tempzyapiClient.POSTgenericRequest(interfaceInfo.getUrl(),param);
+        }
         //获得返回值，返回给前端
         return ResultUtils.success(result);
     }
