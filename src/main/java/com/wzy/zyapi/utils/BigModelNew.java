@@ -22,12 +22,12 @@ public class BigModelNew extends WebSocketListener {
     public static final String apiSecret = "NzMyMjNhZjJiZWQwMDIyYTI2Mjk5NjJi";
     public static final String apiKey = "5dee08fd0fe1ae2ea64b267618e11d91";
 
-    public static List<RoleContent> historyList=new ArrayList<>(); // 对话历史存储集合
+    public static List<RoleContent> historyList = new ArrayList<>(); // 对话历史存储集合
 
-    public static String totalAnswer=""; // 大模型的答案汇总
+    public static String totalAnswer = ""; // 大模型的答案汇总
 
     // 环境治理的重要性  环保  人口老龄化  我爱我的祖国
-    public static  String NewQuestion = "";
+    public static String NewQuestion = "";
 
     public static final Gson gson = new Gson();
 
@@ -35,7 +35,8 @@ public class BigModelNew extends WebSocketListener {
     private String userId;
     private Boolean wsCloseFlag;
 
-    private static Boolean totalFlag=true; // 控制提示用户是否输入
+    private static Boolean totalFlag = true; // 控制提示用户是否输入
+
     // 构造函数
     public BigModelNew(String userId, Boolean wsCloseFlag) {
         this.userId = userId;
@@ -45,22 +46,40 @@ public class BigModelNew extends WebSocketListener {
     // 主函数
     public static void main(String[] args) throws Exception {
         // 个性化参数入口，如果是并发使用，可以在这里模拟
+        if (totalFlag) {
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("我：");
+            totalFlag = false;
+            NewQuestion = scanner.nextLine();
+            // 构建鉴权url
+            String authUrl = getAuthUrl(hostUrl, apiKey, apiSecret);
+            OkHttpClient client = new OkHttpClient.Builder().build();
+            String url = authUrl.toString().replace("http://", "ws://").replace("https://", "wss://");
+            Request request = new Request.Builder().url(url).build();
+            for (int i = 0; i < 1; i++) {
+                totalAnswer = "";
+                WebSocket webSocket = client.newWebSocket(request, new BigModelNew(i + "",
+                        false));
+            }
+        } else {
+            Thread.sleep(200);
+        }
 
     }
 
-    public static boolean canAddHistory(){  // 由于历史记录最大上线1.2W左右，需要判断是能能加入历史
-        int history_length=0;
-        for(RoleContent temp:historyList){
-            history_length=history_length+temp.content.length();
+    public static boolean canAddHistory() {  // 由于历史记录最大上线1.2W左右，需要判断是能能加入历史
+        int history_length = 0;
+        for (RoleContent temp : historyList) {
+            history_length = history_length + temp.content.length();
         }
-        if(history_length>12000){
+        if (history_length > 12000) {
             historyList.remove(0);
             historyList.remove(1);
             historyList.remove(2);
             historyList.remove(3);
             historyList.remove(4);
             return false;
-        }else{
+        } else {
             return true;
         }
     }
@@ -75,47 +94,47 @@ public class BigModelNew extends WebSocketListener {
 
         public void run() {
             try {
-                JSONObject requestJson=new JSONObject();
+                JSONObject requestJson = new JSONObject();
 
-                JSONObject header=new JSONObject();  // header参数
-                header.put("app_id",appid);
-                header.put("uid",UUID.randomUUID().toString().substring(0, 10));
+                JSONObject header = new JSONObject();  // header参数
+                header.put("app_id", appid);
+                header.put("uid", UUID.randomUUID().toString().substring(0, 10));
 
-                JSONObject parameter=new JSONObject(); // parameter参数
-                JSONObject chat=new JSONObject();
-                chat.put("domain","generalv2");
-                chat.put("temperature",0.5);
-                chat.put("max_tokens",4096);
-                parameter.put("chat",chat);
+                JSONObject parameter = new JSONObject(); // parameter参数
+                JSONObject chat = new JSONObject();
+                chat.put("domain", "generalv2");
+                chat.put("temperature", 0.5);
+                chat.put("max_tokens", 4096);
+                parameter.put("chat", chat);
 
-                JSONObject payload=new JSONObject(); // payload参数
-                JSONObject message=new JSONObject();
-                JSONArray text=new JSONArray();
+                JSONObject payload = new JSONObject(); // payload参数
+                JSONObject message = new JSONObject();
+                JSONArray text = new JSONArray();
 
                 // 历史问题获取
-                if(historyList.size()>0){
-                    for(RoleContent tempRoleContent:historyList){
+                if (historyList.size() > 0) {
+                    for (RoleContent tempRoleContent : historyList) {
                         text.add(JSON.toJSON(tempRoleContent));
                     }
                 }
                 System.out.println(historyList.toString());
 
                 // 最新问题
-                RoleContent roleContent=new RoleContent();
-                roleContent.role="user";
-                roleContent.content=NewQuestion;
+                RoleContent roleContent = new RoleContent();
+                roleContent.role = "user";
+                roleContent.content = NewQuestion;
                 text.add(JSON.toJSON(roleContent));
                 historyList.add(roleContent);
 
 
-                message.put("text",text);
-                payload.put("message",message);
+                message.put("text", text);
+                payload.put("message", message);
 
 
-                requestJson.put("header",header);
-                requestJson.put("parameter",parameter);
-                requestJson.put("payload",payload);
-                 // System.err.println(requestJson); // 可以打印看每次的传参明细
+                requestJson.put("header", header);
+                requestJson.put("parameter", parameter);
+                requestJson.put("payload", payload);
+                // System.err.println(requestJson); // 可以打印看每次的传参明细
                 webSocket.send(requestJson.toString());
                 // 等待服务端返回完毕后关闭
                 while (true) {
@@ -152,26 +171,26 @@ public class BigModelNew extends WebSocketListener {
         List<Text> textList = myJsonParse.payload.choices.text;
         for (Text temp : textList) {
             System.out.print(temp.content);
-            totalAnswer=totalAnswer+temp.content;
+            totalAnswer = totalAnswer + temp.content;
         }
         if (myJsonParse.header.status == 2) {
             // 可以关闭连接，释放资源
             System.out.println();
             System.out.println("*************************************************************************************");
-            if(canAddHistory()){
-                RoleContent roleContent=new RoleContent();
+            if (canAddHistory()) {
+                RoleContent roleContent = new RoleContent();
                 roleContent.setRole("assistant");
                 roleContent.setContent(totalAnswer);
                 historyList.add(roleContent);
-            }else{
+            } else {
                 historyList.remove(0);
-                RoleContent roleContent=new RoleContent();
+                RoleContent roleContent = new RoleContent();
                 roleContent.setRole("assistant");
                 roleContent.setContent(totalAnswer);
                 historyList.add(roleContent);
             }
             wsCloseFlag = true;
-            totalFlag=true;
+            totalFlag = true;
         }
     }
 
@@ -253,7 +272,8 @@ public class BigModelNew extends WebSocketListener {
         String role;
         String content;
     }
-    class RoleContent{
+
+    class RoleContent {
         String role;
         String content;
 
