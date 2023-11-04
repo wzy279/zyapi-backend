@@ -28,7 +28,7 @@ spring:
   redis:
     database: 1
     host: localhost
-    port: 8080
+    port: 6379
     timeout: 5000
 #    password: 123321
   # Elasticsearch 配置
@@ -73,4 +73,10 @@ dubbo:
   registry:
     id: nacos-registry
     address: nacos://localhost:8848?username=nacos&password=nacos
-
+xf:
+  config:
+    api-key: 5dee08fd0fe1ae2ea64b267618e11d91
+    host-url: https://spark-api.xf-yun.com/v2.1/chat
+    app-id: 3c82da55
+    api-secret: NzMyMjNhZjJiZWQwMDIyYTI2Mjk5NjJi
+    max-response-time: 30
