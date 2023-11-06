@@ -1,8 +1,8 @@
 package com.wzy.zyapi.service.impl;
 
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wzy.zyapi.common.BaseResponse;
 import com.wzy.zyapi.common.ErrorCode;
@@ -87,23 +87,16 @@ public class PushServiceImpl implements PushService {
         queryWrapper.eq("user_id",uid);
         ModelInfo modelInfo = modelInfoMapper.selectOne(queryWrapper);
         ThrowUtils.throwIf(modelInfo==null,ErrorCode.NOT_FOUND_ERROR);
-        //TODO 修改这个question可以把历史记录一起传过去
-        ArrayList<RoleContent> questions = new ArrayList<>();
-        JSONArray jsonArray = JSON.parseArray(modelInfo.getMessage());
-        if(jsonArray!=null){
-            for(int i=0;i<jsonArray.size();i++){
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                RoleContent roleContent = jsonObject.toJavaObject(RoleContent.class);
-                questions.add(roleContent);
-            }
-        }
+        //修改这个question可以把历史记录一起传过去
+        JSONArray jsonArray = JSONUtil.parseArray(modelInfo.getMessage());
+        ArrayList<RoleContent> questions = (ArrayList<RoleContent>) JSONUtil.toList(jsonArray, RoleContent.class);
         RoleContent userRoleContent = RoleContent.createUserRoleContent(text);
         questions.add(userRoleContent);
         XFWebSocketListener xfWebSocketListener = new XFWebSocketListener();
         WebSocket webSocket = xfWebClient.sendMsg(uid, questions, xfWebSocketListener);
         if (webSocket == null) {
             log.error("webSocket连接异常");
-            ResultBean.fail("请求异常，请联系管理员");
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"请求异常，请联系管理员");
         }
         try {
             int count = 0;
@@ -121,7 +114,7 @@ public class PushServiceImpl implements PushService {
             RoleContent answer = RoleContent.createAssistantRoleContent(xfWebSocketListener.getAnswer());
             jsonArray.add(userRoleContent);
             jsonArray.add(answer);
-            String message = jsonArray.toJSONString();
+            String message = jsonArray.toString();
             ModelInfo modelInfo1 = new ModelInfo();
             modelInfo1.setId(id);
             modelInfo1.setMessage(message);
